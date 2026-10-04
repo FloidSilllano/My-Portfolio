@@ -1,100 +1,68 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mechanical Engineering Portfolio</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="style.css">
-</head>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #333;
-      line-height: 1.6;
-    }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      padding: 15px;
-      background-color: #1f2937;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    nav a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    nav a:hover {
-      text-decoration: underline;
-    }
-    section {
-      padding: 50px 20px;
-      max-width: 800px;
-      margin: auto;
-      border-bottom: 1px solid #ddd;
-    }
-    h1, h2 {
-      color: #1f2937;
-    }
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-    li {
-      padding: 8px 0;
-      font-size: 1.1rem;
-    }
-    li i {
-      margin-right: 10px;
-      color: #002D62; /* UTSA Blue accent */
-  </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  </head>
+// Select DOM elements
+const checkInForm = document.getElementById('checkInForm');
+const attendeeNameInput = document.getElementById('attendeeName');
+const teamSelect = document.getElementById('teamSelect');
+const greeting = document.getElementById('greeting');
+const attendeeCountSpan = document.getElementById('attendeeCount');
+const progressBar = document.getElementById('progressBar');
 
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
-  </nav>
+const waterCountSpan = document.getElementById('waterCount');
+const zeroCountSpan = document.getElementById('zeroCount');
+const powerCountSpan = document.getElementById('powerCount');
 
-  <section id="home">
-    <h1>Welcome to My Portfolio</h1>
-    <p>Showcasing engineering principles, CAD designs, and web development.</p>
-  </section>
+// Initialize tracking variables
+let totalAttendees = 0;
+let waterCount = 0;
+let zeroCount = 0;
+let powerCount = 0;
+const maxCapacity = 50; // Defined goal from index.html
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>Welcome! I'm a junior mechanical engineering major at UTSA. Explore my portfolio to see how I combine analytical problem-solving with creative web development and engineering projects.</p>
-  </section>
-<section id="skills">
-        <h2>Technical Skills</h2>
-        <ul>
-            <li><i class="fa-solid fa-gears"></i> SolidWorks & Engineering Design</li>
-            <li><i class="fa-solid fa-compass-drafting"></i> Technical Drawing & Measurements</li>
-            <li><i class="fa-solid fa-file-excel"></i> Microsoft Office (Word, Excel, PowerPoint)</li>
-        </ul>
-    </section>
+// Listen for form submission
+checkInForm.addEventListener('submit', function (event) {
+    // Prevent page reload on submit
+    event.preventDefault();
 
-  <section id="projects">
-    <h2>Engineering Projects</h2>
-    <div class="project-card">
-      <h3>Mechanical Design Project</h3>
-      <p>Focused on structural analysis, prototyping, and material selection for optimized performance.</p>
-    </div>
-  </section>
+    // Get input values
+    const name = attendeeNameInput.value.trim();
+    const team = teamSelect.value;
 
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <p>Feel free to reach out via email or connect with me on LinkedIn to discuss engineering and tech!</p>
-  </section>
+    // Validate inputs
+    if (name === '' || team === '') return;
 
-</body>
-</html>
+    // Increment total attendance
+    totalAttendees++;
+
+    // Increment specific team count and update variable
+    if (team === 'water') {
+        waterCount++;
+        waterCountSpan.textContent = waterCount;
+    } else if (team === 'zero') {
+        zeroCount++;
+        zeroCountSpan.textContent = zeroCount;
+    } else if (team === 'power') {
+        powerCount++;
+        powerCountSpan.textContent = powerCount;
+    }
+
+    // Update total attendance display
+    attendeeCountSpan.textContent = totalAttendees;
+
+    // Update progress bar width percentage
+    const progressPercentage = (totalAttendees / maxCapacity) * 100;
+    progressBar.style.width = progressPercentage + '%';
+
+    // Display personalized greeting
+    greeting.textContent = `Welcome, ${name}! Successfully checked in for Team ${getTeamDisplayName(team)}.`;
+
+    // Clear form inputs for the next entry
+    attendeeNameInput.value = '';
+    teamSelect.selectedIndex = 0;
+});
+
+// Helper function to get clean team display names
+function getTeamDisplayName(teamKey) {
+    if (teamKey === 'water') return 'Water Wise';
+    if (teamKey === 'zero') return 'Net Zero';
+    if (teamKey === 'power') return 'Renewables';
+    return '';
+}
